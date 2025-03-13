@@ -1,14 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "hash_table.h"
 
 /**
  * Computes the hash value of a given string using the FNV-1a hash function.
  *
- * @param str The input string to be hashed.
- * @param table_size The size of the hash table.
- * @return The computed hash value modulo the table size.
+ * @param str - The input string to be hashed.
+ * @param table_size - The size of the hash table.
+ * @return - The computed hash value modulo the table size.
  */
 unsigned long ht_hash(const char *str, unsigned int table_size) 
 {
@@ -26,7 +27,7 @@ unsigned long ht_hash(const char *str, unsigned int table_size)
 /**
  * Creates and initializes a new hash table.
  *
- * @return A pointer to the newly allocated HashTable.
+ * @return - A pointer to the newly allocated HashTable.
  */
 HashTable *ht_create() 
 {
@@ -36,7 +37,7 @@ HashTable *ht_create()
         exit(EXIT_FAILURE);
     }
 
-    for (int i = 0; i < MAX_TABLE_SIZE; i++)
+    for (int i = 0; i < TABLE_SIZE; i++)
         table->buckets[i] = NULL;
 
     return table;
@@ -45,13 +46,13 @@ HashTable *ht_create()
 /**
  * Inserts a key-value pair into the hash table.
  *
- * @param table The hash table where the key-value pair should be inserted.
- * @param key The key associated with the value.
- * @param value The integer value to be stored.
+ * @param table - The hash table where the key-value pair should be inserted.
+ * @param key - The key associated with the value.
+ * @param value - The integer value to be stored.
  */
 void ht_insert(HashTable *table, const char *key, int value) 
 {
-    unsigned int index = ht_hash(key, MAX_TABLE_SIZE);
+    unsigned int index = ht_hash(key, TABLE_SIZE);
 
     HashNode *new_node = (HashNode *)malloc(sizeof(HashNode));
     if (!new_node) {
@@ -69,13 +70,13 @@ void ht_insert(HashTable *table, const char *key, int value)
 /**
  * Searches for a key in the hash table and retrieves its associated value.
  *
- * @param table The hash table to search in.
- * @param key The key whose associated value is to be retrieved.
- * @return The value associated with the key, or -1 if the key is not found.
+ * @param table - The hash table to search in.
+ * @param key - The key whose associated value is to be retrieved.
+ * @return - The value associated with the key, or -1 if the key is not found.
  */
 int ht_search(HashTable *table, const char *key) 
 {
-    unsigned int index = ht_hash(key, MAX_TABLE_SIZE);
+    unsigned int index = ht_hash(key, TABLE_SIZE);
     HashNode *current = table->buckets[index];
 
     while (current) {
@@ -91,12 +92,12 @@ int ht_search(HashTable *table, const char *key)
 /**
  * Deletes a key-value pair from the hash table.
  *
- * @param table The hash table from which the key-value pair should be removed.
- * @param key The key to be deleted.
+ * @param table - The hash table from which the key-value pair should be removed.
+ * @param key - The key to be deleted.
  */
-void delete(HashTable *table, const char *key) 
+void ht_delete(HashTable *table, const char *key) 
 {
-    unsigned int index = ht_hash(key, MAX_TABLE_SIZE);
+    unsigned int index = ht_hash(key, TABLE_SIZE);
     HashNode *current = table->buckets[index];
     HashNode *prev = NULL;
 
@@ -116,4 +117,25 @@ void delete(HashTable *table, const char *key)
         prev = current;
         current = current->next;
     }
+}
+
+/**
+ * Frees the hash table.
+ *
+ * @param table - The hash table to free.
+ */
+void ht_free(HashTable *table) 
+{
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        HashNode *current = table->buckets[i];
+        while (current) {
+            HashNode *temp = current;
+
+            current = current->next;
+            free(temp->key);
+            free(temp);
+        }
+    }
+
+    free(table);
 }

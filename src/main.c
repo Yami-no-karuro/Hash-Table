@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 #include "lib/hash_table.h"
 
 int main() {
@@ -10,6 +11,7 @@ int main() {
     printf("foo: %d\n", ht_search(table, "foo"));
     printf("bar: %d\n", ht_search(table, "bar"));
 
+    ht_free(table);
     return 0;
 }
 
