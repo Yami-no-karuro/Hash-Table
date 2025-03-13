@@ -14,4 +14,3 @@ int main() {
     ht_free(table);
     return 0;
 }
-
