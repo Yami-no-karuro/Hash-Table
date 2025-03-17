@@ -2,7 +2,8 @@
 
 #include "lib/hash_table.h"
 
-int main() {
+int main() 
+{
     HashTable *table = ht_create();
 
     ht_insert(table, "foo", 1);
