@@ -5,6 +5,25 @@
 #include "hash_table.h"
 
 /**
+ * Creates and initializes a new hash table.
+ *
+ * @return - A pointer to the newly allocated HashTable.
+ */
+HashTable *ht_create() 
+{
+    HashTable *table = (HashTable *)malloc(sizeof(HashTable));
+    if (!table) {
+        printf("Error: Unable to allocate memory for a new \"HashTable\" entry.");
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < TABLE_SIZE; i++)
+        table->buckets[i] = NULL;
+
+    return table;
+}
+
+/**
  * Computes the hash value of a given string using the FNV-1a hash function.
  *
  * @param str - The input string to be hashed.
@@ -22,25 +41,6 @@ unsigned long ht_hash(const char *str, unsigned int table_size)
     }
 
     return hash % table_size;
-}
-
-/**
- * Creates and initializes a new hash table.
- *
- * @return - A pointer to the newly allocated HashTable.
- */
-HashTable *ht_create() 
-{
-    HashTable *table = (HashTable *)malloc(sizeof(HashTable));
-    if (!table) {
-        printf("Error: Unable to allocate memory for a new \"HashTable\" entry.");
-        exit(EXIT_FAILURE);
-    }
-
-    for (int i = 0; i < TABLE_SIZE; i++)
-        table->buckets[i] = NULL;
-
-    return table;
 }
 
 /**
