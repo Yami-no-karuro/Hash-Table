@@ -189,3 +189,21 @@ unsigned long ht_hash(const char *str, unsigned int table_size)
 
     return hash % table_size;
 }
+
+/**
+ * Iterates over all key-value pairs in the hash table and applies the provided callback.
+ *
+ * @param table - The hash table to iterate over.
+ * @param callback - A function pointer that will be called for each key-value pair.
+ * @param user_data - Optional pointer to user data to pass to the callback function.
+ */
+void ht_foreach(HashTable *table, ht_callback callback, void *user_data)
+{
+    for (int i = 0; i < table->size; i++) {
+        HashNode *current = table->buckets[i];
+        while (current) {
+            callback(current->key, current->value, user_data);
+            current = current->next;
+        }
+    }
+}
